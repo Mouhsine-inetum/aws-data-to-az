@@ -17,7 +17,7 @@ parameters:
     default: false
 
 stages:
-- template: infrastructure-template.yml
+- template: infra-template.yml
   parameters:
     stages:
       - ${{ if eq(parameters.dev, true) }}:
