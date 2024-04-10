@@ -28,7 +28,7 @@ stages:
               inlineScript: |
                 az --version
                 az account get-access-token
-                az group create --location 'westeurope' --name ud-vehiculeData-rg'
+                az group create --location westeurope --name ud-vehiculeData-rg'
 
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Provision Infrastructure - vehicule data transfer'
