@@ -1,0 +1,44 @@
+parameters:
+- name: stages
+  type: object
+  default: []
+
+stages:
+- ${{ each stage in parameters.stages }}:
+  - stage: "${{ stage.environmentCode }}"
+    displayName: "${{ stage.environmentCode }}"
+    jobs:
+      - job: "BicepConfigure"
+        pool:
+          vmImage: windows-latest
+        displayName: "Integration platform - ${{ stage.environmentCode }}"
+        variables:
+          ENV_CODE: ${{ stage.environmentCode }}
+          CONFIG_PATH: '$(System.DefaultWorkingDirectory)'
+          location: 'West Europe'
+
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Provision RG - vehicule data transfer'
+            inputs:
+              azureSubscription: ${{ stage.servicePrincipal }}
+              scriptType: pscore
+              scriptLocation: inlineScript
+              useGlobalConfig: false
+              inlineScript: |
+                az --version
+                az account get-access-token
+                az group create --location 'westeurope' --name ud-vehiculeData-rg'
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Provision Infrastructure - vehicule data transfer'
+            inputs:
+              deploymentScope: 'ResourceGroup'
+              azureResourceManagerConnection: ${{ stage.servicePrincipal }}
+              resourceGroupName: "${{ stage.rgName }}"
+              location: '$(location)'
+              templateLocation: 'Linked artifact'
+              csmFile: "$(CONFIG_PATH)/main.bicep"
+              csmParametersFile: "$(CONFIG_PATH)/main.bicepparam"
+              deploymentMode: 'Incremental'
+              deploymentOutputs: infrastructureOutputs

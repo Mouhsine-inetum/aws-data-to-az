@@ -1,0 +1,40 @@
+name: 'vehicule Data transfer project'
+
+trigger: none
+
+parameters:
+  - name: dev
+    displayName: DEV
+    type: boolean
+    default: false
+  - name: acc
+    displayName: ACC
+    type: boolean
+    default: false
+  - name: prd
+    displayName: PRD
+    type: boolean
+    default: false
+
+stages:
+- template: infrastructure-template.yml
+  parameters:
+    stages:
+      - ${{ if eq(parameters.dev, true) }}:
+        - name: 'Deploy_dev'
+          displayName: 'Deploy DEV'
+          servicePrincipal: 'DEV Platform Integration'
+          environmentCode: 'dev'
+          rgName: 'ud-vehiculeData-rg'
+
+      - ${{ if eq(parameters.acc, true) }}:
+        - name: 'Deploy_acc'
+          displayName: 'Deploy ACC'
+          servicePrincipal: 'ACC Platform Integration'
+          environmentCode: 'acc'
+
+      - ${{ if eq(parameters.prd, true) }}:
+        - name: 'Deploy_prd'
+          displayName: 'Deploy PRD'
+          servicePrincipal: 'PRD Platform Integration'
+          environmentCode: 'prd'
