@@ -33,7 +33,7 @@ stages:
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Provision Infrastructure - vehicule data transfer'
             inputs:
-              deploymentScope: 'ResourceGroup'
+              deploymentScope: 'Resource Group'
               azureResourceManagerConnection: ${{ stage.servicePrincipal }}
               resourceGroupName: "${{ stage.rgName }}"
               location: '$(location)'
