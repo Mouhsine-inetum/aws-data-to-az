@@ -7,11 +7,20 @@ stages:
 - ${{ each stage in parameters.stages }}:
   - stage: "${{ stage.environmentCode }}"
     displayName: "${{ stage.environmentCode }}"
+    variables:
+      - group: 'vg-vdt-infrastructure-${{ stage.environmentCode}}'
+      - name: version
+        value: 001
+      - name: rgName
+        value: "rg-$(companyShort)-$(domainShort)-$(appShort)-$(locationAbbr)-${{ stage.environmentCode }}-$(version)"
+      - name: partName
+        value: "$(companyShort)-$(domainShort)-$(appShort)-$(locationAbbr)-${{ stage.environmentCode }}-$(version)"
+
     jobs:
       - job: "BicepConfigure"
         pool:
           vmImage: windows-latest
-        displayName: "Integration platform - ${{ stage.environmentCode }}"
+        displayName: "Data Transfer- ${{ stage.environmentCode }}"
         variables:
           ENV_CODE: ${{ stage.environmentCode }}
           CONFIG_PATH: '$(System.DefaultWorkingDirectory)'
@@ -28,7 +37,7 @@ stages:
               inlineScript: |
                 az --version
                 az account get-access-token
-                az group create --location westeurope --name ud-vehiculeData-rg
+                az group create --location westeurope --name $(rgName)
 
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Provision Infrastructure - vehicule data transfer'
@@ -42,3 +51,5 @@ stages:
               csmParametersFile: "$(CONFIG_PATH)/main.bicepparam"
               deploymentMode: 'Incremental'
               deploymentOutputs: infrastructureOutputs
+              overrideParameters: -partName $(partName)
+              

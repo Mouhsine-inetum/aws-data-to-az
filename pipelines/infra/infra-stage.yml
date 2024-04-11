@@ -15,6 +15,11 @@ parameters:
     displayName: PRD
     type: boolean
     default: false
+  - name: serviceConnection
+    type: string
+    default: Visual Studio Professional Subscription(0f7a3b62-c1a4-4aa9-97c3-3bf5f497b5ab)
+
+
 
 stages:
 - template: infra-template.yml
@@ -25,7 +30,6 @@ stages:
           displayName: 'Deploy DEV'
           servicePrincipal: 'Visual Studio Professional Subscription(0f7a3b62-c1a4-4aa9-97c3-3bf5f497b5ab)'
           environmentCode: 'dev'
-          rgName: 'ud-vehiculeData-rg'
 
       - ${{ if eq(parameters.acc, true) }}:
         - name: 'Deploy_acc'
