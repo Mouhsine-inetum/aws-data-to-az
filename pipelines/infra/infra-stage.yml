@@ -28,17 +28,17 @@ stages:
       - ${{ if eq(parameters.dev, true) }}:
         - name: 'Deploy_dev'
           displayName: 'Deploy DEV'
-          servicePrincipal: 'Visual Studio Professional Subscription(0f7a3b62-c1a4-4aa9-97c3-3bf5f497b5ab)'
+          servicePrincipal: '${{ parameters.serviceConnection }}'
           environmentCode: 'dev'
 
       - ${{ if eq(parameters.acc, true) }}:
         - name: 'Deploy_acc'
           displayName: 'Deploy ACC'
-          servicePrincipal: 'Visual Studio Professional Subscription(0f7a3b62-c1a4-4aa9-97c3-3bf5f497b5ab)'
+          servicePrincipal: '${{ parameters.serviceConnection }}'
           environmentCode: 'acc'
 
       - ${{ if eq(parameters.prd, true) }}:
         - name: 'Deploy_prd'
           displayName: 'Deploy PRD'
-          servicePrincipal: 'Visual Studio Professional Subscription(0f7a3b62-c1a4-4aa9-97c3-3bf5f497b5ab)'
+          servicePrincipal: '${{ parameters.serviceConnection }}'
           environmentCode: 'prd'
