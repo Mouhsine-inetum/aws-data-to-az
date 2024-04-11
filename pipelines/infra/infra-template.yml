@@ -20,7 +20,7 @@ stages:
       - job: "BicepConfigure"
         pool:
           vmImage: windows-latest
-        displayName: "Data Transfer- ${{ stage.environmentCode }}"
+        displayName: "Data Transfer - ${{ stage.environmentCode }}"
         variables:
           ENV_CODE: ${{ stage.environmentCode }}
           CONFIG_PATH: '$(System.DefaultWorkingDirectory)'
@@ -44,7 +44,7 @@ stages:
             inputs:
               deploymentScope: 'Resource Group'
               azureResourceManagerConnection: ${{ stage.servicePrincipal }}
-              resourceGroupName: "${{ stage.rgName }}"
+              resourceGroupName: "$(rgName)"
               location: '$(location)'
               templateLocation: 'Linked artifact'
               csmFile: "$(CONFIG_PATH)/main.bicep"
